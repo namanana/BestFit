@@ -296,7 +296,7 @@ class BestFitPriority:
         indic, part, e = self.full_fit_first(parts, position)
         if indic == 1:
             print (type(parts), type(e))
-            print ('完全匹配成功', part, e)
+            print ('完全匹配成功\n', part, e)
             parts.remove(part)
             print ("还没有放进去的零件有：", parts, "\n")
             return [part], e
@@ -304,7 +304,7 @@ class BestFitPriority:
             indic, part, e = self.width_fit_first(parts, position)
             if indic == 1:
                 print (type(parts), type(e))
-                print ('宽度匹配成功', part, e)
+                print ('宽度匹配成功\n', part, e)
                 parts.remove(part)
                 print ("还没有放进去的零件有：", parts, "\n")
                 return [part], e
@@ -312,7 +312,7 @@ class BestFitPriority:
                 indic, part, e = self.height_fit_first(parts, position)
                 if indic == 1:
                     print (type(parts), type(e))
-                    print ('高度匹配成功', part, e)
+                    print ('高度匹配成功\n', part, e)
                     parts.remove(part)
                     print ("还没有放进去的零件有：", parts, "\n")
                     return [part], e
@@ -320,7 +320,7 @@ class BestFitPriority:
                     indic, part, e = self.joint_width_fit_first(parts, position)
                     if indic == 1:
                         print (type(parts), type(e))
-                        print ('组合宽度匹配成功', part, e)
+                        print ('组合宽度匹配成功\n', part, e)
                         parts.remove(part)
                         print ("还没有放进去的零件有：", parts, "\n")
                         return [part], e
@@ -328,7 +328,7 @@ class BestFitPriority:
                         indic, part, e = self.place_first(parts, position)
                         if indic == 1:
                             print (type(parts), type(e))
-                            print ('330，可装入优先成功', part, e)
+                            print ('可装入优先成功\n', part, e)
                             parts.remove(part)
                             print ("还没有放进去的零件有：", parts, "\n")
                             return [part], e
