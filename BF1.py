@@ -8,7 +8,7 @@ class BestFitPriority:
     def __init__(self, is_consider_floor):
         self.floor = is_consider_floor                  # 热压罐可用层数
         self.h = 0                                      # 最低左对齐最佳匹配算法所需要的高度
-        self.put_in = []                                # 能放进热压罐的零件列表    output
+        self.put_in = []                                # 能放进热压罐的零件列表
         self.put_position = []                          # 装载过程中产生的轮廓线集合
 
     def full_fit_first(self, parts, position):
