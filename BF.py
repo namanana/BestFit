@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 import copy
+import matplotlib.pyplot as plt
 from operator import itemgetter
 
 
@@ -10,7 +11,7 @@ class BestFitPriority:
     def __init__(self, is_consider_floor):
         self.floor = is_consider_floor                  # 热压罐可用层数
         self.h = 0                                      # 最低左对齐最佳匹配算法所需要的高度
-        self.put_in = []                                # 能放进热压罐的零件列表    output
+        self.put_in = []                                # 能放进热压罐的零件列表
         self.put_position = []                          # 装载过程中产生的轮廓线集合
 
     def full_fit_first(self, parts, position):
@@ -376,6 +377,25 @@ class BestFitPriority:
         else:
             return unsolved, solved
         
+    def printRectangle(self, put_points):
+        print("--绘制图形---")
+        plt.axis([0, 50, 0, 50])
+        currentAxis = plt.gca()
+        count = len(put_points)
+        while count > 0 :
+            count -= 1
+            x = put_points[count]["x"]
+            y = put_points[count]["y"]
+            w = put_points[count]["w"]
+            h = put_points[count]["h"]
+            rect = plt.Rectangle((x,y),w,h,linewidth=1,edgecolor='r',facecolor='none')
+        currentAxis.add_patch(rect)
+        plt.show()
+        print("--绘制完成---")
+  
+
+
+
 def demo():
     total_area = {'length': 4, 'wide': 5}
     part_list = [{'length': 1.5, 'wide': 2, 'is_fixed_direction': 1, 'label':1},
@@ -387,16 +407,10 @@ def demo():
                  ]
     a = BestFitPriority(10)
     unsolved, solved = a.one_floor(part_list, total_area)
+    print(a.put_in)
     
-    n = np.size(part_list)
-    x = np.zeros(n)
-    y = np.zeros(n)
-    for i in range(0,5):
-        x[i] = a.put_in[i]['x']
-        y[i] = a.put_in[i]['y']
-    z = zip(x, y)
-    z = list(z)
-    print('坐标：', z)
+    a.printRectangle(a.put_in)  # 绘图
+    
     
 if __name__ == '__main__':
     demo()
