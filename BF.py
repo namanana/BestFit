@@ -8,7 +8,7 @@ class BestFitPriority:
     def __init__(self, is_consider_floor):
         self.floor = is_consider_floor                  # 热压罐可用层数
         self.h = 0                                      # 最低左对齐最佳匹配算法所需要的高度
-        self.put_in = []                                # 能放进热压罐的零件列表    output
+        self.put_in = []                                # 能放进热压罐的零件列表    
         self.put_position = []                          # 装载过程中产生的轮廓线集合
 
     def full_fit_first(self, parts, position):
@@ -34,6 +34,7 @@ class BestFitPriority:
                         position.remove(position[0])
                         position = sorted(position, key=itemgetter("y"), reverse=True)
                         self.h = position[0]['y']
+                        print(self.put_in)
                         return 1, part, position
                     elif position[0]['x'] + part['wide'] == position[pos]['x'] and\
                                             position[0]['y'] + part['length'] == position[pos]['y']:
@@ -44,6 +45,7 @@ class BestFitPriority:
                         position.remove(position[0])
                         position = sorted(position, key=itemgetter("y"), reverse=True)
                         self.h = position[0]['y']
+                        print(self.put_in)
                         return 1, part, position
             elif part['is_fixed_direction'] == 0 and part['length'] == wide:
                 for pos in range(0, len(position)):
@@ -55,6 +57,7 @@ class BestFitPriority:
                         position.remove(position[0])
                         position = sorted(position, key=itemgetter("y"), reverse=True)
                         self.h = position[0]['y']
+                        print(self.put_in)
                         return 1, part, position
                     elif position[0]['x'] + part['length'] == position[pos]['x'] and\
                                             position[0]['y'] + part['wide'] == position[pos]['y']:
@@ -64,6 +67,7 @@ class BestFitPriority:
                         position[pos]['w'] += wide
                         position = sorted(position, key=itemgetter("y"), reverse=True)
                         self.h = position[0]['y']
+                        print(self.put_in)
                         return 1, part, position
         return 0, [], position
 
@@ -96,15 +100,17 @@ class BestFitPriority:
                 self.h = position[0]['y']
                 self.put_in.append({'x': position[0]['x'], 'y': position[0]['y'], 'w': temp[0]['wide'],
                                     'h': temp[0]['length'], 'angle': 90})
-                return 1, temp[0], position
+                print(self.put_in)
+                return 1, temp[0], position, self.put_in
         else:
             temp = sorted(temp, key=itemgetter('length'), reverse=True)
             position[0]['y'] += temp[0]['length']
             position = sorted(position, key=itemgetter("y"), reverse=True)
             self.h = position[0]['y']
-            self.put_in.append({'x': position[0]['x'], 'y': position[0]['y'], 'w': temp[0]['wide'],
+            self.put_in.append({'x': position[0]['x'], 'y': position[0]['y']-temp[0]['length'], 'w': temp[0]['wide'],
                                 'h': temp[0]['length'], 'angle': 0})
-            return 1, temp[0], position
+            print(self.put_in)
+            return 1, temp[0], position, self.put_in
 
     def height_fit_first(self, parts, position):
         """
@@ -140,6 +146,7 @@ class BestFitPriority:
                             position[0]['w'] -= t['length']
                             position = sorted(position, key=itemgetter("y"), reverse=True)
                             self.h = position[0]['y']
+                            print(self.put_in)
                             return 1, t, position
                         elif position[0]['x'] + position[0]['w'] == position[pos]['x'] and\
                                                 position[0]['y'] + t['wide'] == position[pos]['y']:
@@ -150,6 +157,7 @@ class BestFitPriority:
                             position[pos]['w'] += t['length']
                             position = sorted(position, key=itemgetter("y"), reverse=True)
                             self.h = position[0]['y']
+                            print(self.put_in)
                             return 1, t, position
                 return 0, {}, position
 
@@ -160,6 +168,7 @@ class BestFitPriority:
                                             position[0]['y'] + t['length'] == position[pos]['y']:
                         self.put_in.append({'x': position[0]['x'], 'y': position[0]['y'], 'w': t['wide'],
                                             'h': t['length'], 'angle': 0})
+                        print(self.put_in)
                         position[pos]['w'] += t['wide']
                         position[0]['x'] += t['wide']
                         position[0]['w'] -= t['wide']
@@ -170,6 +179,7 @@ class BestFitPriority:
                                             position[0]['y'] + t['length'] == position[pos]['y']:
                         self.put_in.append({'x': position[pos]['x'] - t['wide'], 'y': position[0]['y'], 'w': t['wide'],
                                             'h': t['length'], 'angle': 0})
+                        print(self.put_in)
                         position[0]['w'] -= t['wide']
                         position[pos]['x'] -= t['wide']
                         position[pos]['w'] += t['wide']
@@ -195,6 +205,7 @@ class BestFitPriority:
                 if part != pt and part['wide'] + pt['wide'] == wide:
                     self.put_in.append({'x': position[0]['x'], 'y': position[0]['y'], 'w': part['wide'],
                                         'h': part['length'], 'angle': 0})
+                    print(self.put_in)
                     height = position[0]['y']
                     position[0]['y'] += part['length']
                     position[0]['w'] = part['wide']
@@ -206,6 +217,7 @@ class BestFitPriority:
                 elif part != pt and part['is_fixed_direction'] == 0 and part['length'] + pt['wide'] == wide:
                     self.put_in.append({'x': position[0]['x'], 'y': position[0]['y'], 'w': part['wide'],
                                         'h': part['length'], 'angle': 90})
+                    print(self.put_in)
                     height = position[0]['y']
                     position[0]['y'] += part['wide']
                     position[0]['w'] = part['length']
@@ -217,6 +229,7 @@ class BestFitPriority:
                 elif part != pt and pt['is_fixed_direction'] == 0 and part['wide'] + pt['length'] == wide:
                     self.put_in.append({'x': position[0]['x'], 'y': position[0]['y'], 'w': part['wide'],
                                         'h': part['length'], 'angle': 0})
+                    print(self.put_in)
                     height = position[0]['y']
                     position[0]['y'] += part['length']
                     position[0]['w'] = part['wide']
@@ -228,6 +241,7 @@ class BestFitPriority:
                 elif part != pt and pt['is_fixed_direction'] == part['is_fixed_direction'] == 0 and part['length'] + pt['length'] == wide:
                     self.put_in.append({'x': position[0]['x'], 'y': position[0]['y'], 'w': part['wide'],
                                         'h': part['length'], 'angle': 90})
+                    print(self.put_in)
                     height = position[0]['y']
                     position[0]['y'] += part['wide']
                     position[0]['w'] = part['length']
@@ -267,6 +281,7 @@ class BestFitPriority:
                 temp = sorted(temp, key=itemgetter('area'), reverse=True)
                 self.put_in.append({'x': position[0]['x'], 'y': position[0]['y'], 'w': temp[0]['wide'],
                                     'h': temp[0]['length'], 'angle': 90})
+                print(self.put_in)
                 position.append({'x': position[0]['x'] + temp[0]['length'], 'y': position[0]['y'],
                                  'w': position[0]['w'] - temp[0]['length']})
                 position[0]['y'] += temp[0]['wide']
@@ -278,6 +293,7 @@ class BestFitPriority:
             temp = sorted(temp, key=itemgetter('area'), reverse=True)
             self.put_in.append({'x': position[0]['x'], 'y': position[0]['y'], 'w': temp[0]['wide'],
                                 'h': temp[0]['length'], 'angle': 0})
+            print(self.put_in)
             position.append({'x': position[0]['x']+temp[0]['wide'], 'y': position[0]['y'],
                              'w': position[0]['w']-temp[0]['wide']})
             position[0]['y'] += temp[0]['length']
