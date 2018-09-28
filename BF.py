@@ -371,7 +371,7 @@ class BestFitPriority:
                 solved.append(part[0])
                 unsolved = parts
                 #print(self.h)
-                print('a.put_in:\n', self.put_in, '/n')
+                print('a.put_in:\n', self.put_in, '\n')
             else:
                 return unsolved, solved
         else:
@@ -389,7 +389,7 @@ class BestFitPriority:
             w = put_points[count]["w"]
             h = put_points[count]["h"]
             rect = plt.Rectangle((x,y),w,h,linewidth=1,edgecolor='r',facecolor='none')
-        currentAxis.add_patch(rect)
+            currentAxis.add_patch(rect)
         plt.show()
         print("--绘制完成---")
   
